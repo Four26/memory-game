@@ -1,5 +1,11 @@
-import './App.css'
+import { Title } from './components/Title.jsx';
+import { AlertMessage } from './components/AlertMessage.jsx';
+import { Instructions } from './components/Instructions';
+import { PokemonCard } from './components/PokemonCard.jsx';
+import { Score } from './components/Score.jsx';
+import './App.css';
 import { useState, useEffect } from 'react';
+
 
 function App() {
     const [pokemonList, setPokemonList] = useState([]);
@@ -25,7 +31,7 @@ function App() {
                 name,
                 img: sprites.other["official-artwork"].front_default
             }));
-
+            console.log(pokemonImages);
             setPokemonList(pokemonImages);
         } catch (error) {
             alert('Error fetching Pokemon', error);
@@ -75,43 +81,20 @@ function App() {
 
     return (
         <>
-            <h1 className='title'>Memory Game</h1>
-
-            {alertMessage.text && (<div className={`message ${alertMessage.type}`}>{alertMessage.text}</div>)}
-
-            <div className="instructions">
-                <h2>How to Play?</h2>
-                <p>
-                    The goal of the game is to remember and click on all the Pokémon images without clicking the same one twice.
-                </p>
-                <ul>
-                    <li>Click on any image to score a point.</li>
-                    <li>Each time you click an image, it will shuffle with other images.</li>
-                    <li>If you click the same image twice, you lose all your points and start over.</li>
-                    <li>Try to beat your best score by clicking all the images correctly.</li>
-                </ul>
-            </div>
-
-            <div className="score-con">
-                <div className="score">Score: {score}</div>
-                <div className="best-score">Best Score:{bestScore}</div>
-            </div>
-
+            <Title />
+            <AlertMessage message={alertMessage.text} type={alertMessage.type} />
+            <Instructions />
+            <Score score={score} bestScore={bestScore} />
             <div className="img-con">
                 <ul className='ul'>
-                    {pokemonList.map((pokemon) => {
-                        return (
-                            <li key={pokemon.id}>
-                                <h2>{pokemon.name}</h2>
-                                <img src={pokemon.img} alt={pokemon.name} onClick={() => handleClick(pokemon.id)} className='img' />
-                            </li>
-                        )
-                    })}
+                    {pokemonList.map((pokemon) => (
+                        <PokemonCard key={pokemon.id} pokemon={pokemon} onClick={handleClick} />
+                    ))}
                 </ul>
             </div>
-
         </>
     )
 }
 
-export default App
+export default App;
+
